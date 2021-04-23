@@ -2,10 +2,12 @@ package it.unibo.oop.lab.lambda.ex01;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -58,13 +60,18 @@ public final class LambdaUtilities {
      *         otherwise.
      */
     public static <T> List<Optional<T>> optFilter(final List<T> list, final Predicate<T> pre) {
-        /*
-         * Suggestion: consider Optional.filter
-         */
-        return null;
+    	final List<Optional<T>> l = new ArrayList<>();
+    	list.forEach(t -> {
+    		if(pre.test(t)) {
+    			l.add(Optional.of(t));
+    		}
+    		l.add(Optional.empty());
+    	});
+    	
+        return  l;
     }
 
-    /**
+    /**                                                                                               
      * @param list
      *            input list
      * @param op
@@ -77,10 +84,25 @@ public final class LambdaUtilities {
      *         based on the mapping done by the function
      */
     public static <R, T> Map<R, Set<T>> group(final List<T> list, final Function<T, R> op) {
+    	final Map<R, Set<T>> map = new HashMap<>();
+    	
+    	list.forEach(t -> { 
+    		R ris = op.apply(t);// even odd
+    		if ( map.get( ris ) == null ) {
+    			Set<T> set = new HashSet<T>();
+    			set.add(t);
+    			map.put(ris, set);
+    		} else {
+    			map.get(ris).add(t);
+    		}
+    		
+    		//map.merge(ris, new HashSet<T>(), (t, ris) -> map.get(ris).add(l)) );
+    		
+    	});
         /*
          * Suggestion: consider Map.merge
          */
-        return null;
+        return map;
     }
 
     /**
